@@ -2,7 +2,8 @@ import React, { Component } from "react";
 
 export default class NewItems extends Component {
   render() {
-    let { title, description, imgUrl, newsUrl } = this.props;
+    let { title, description, imgUrl, newsUrl, author, date, source } =
+      this.props;
 
     return (
       <>
@@ -17,10 +18,25 @@ export default class NewItems extends Component {
             alt="..."
           />
           <div className="card-body">
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+              {source}
+              <span class="visually-hidden">unread messages</span>
+            </span>
+
             <h5 className="card-title">{title}....</h5>
+
             <p className="card-text">
-              {description ? description : "NO DESCRIPTION"}.... <i>Click below for more detail</i>
+              {description ? description : "NO DESCRIPTION"}....
+              <i>Click below for more detail</i>
             </p>
+
+            <p className="card-text">
+              <small className="text-muted">
+                By <i>{author ? author : "Unknown"}</i> on
+                {new Date(date).toGMTString()}
+              </small>
+            </p>
+
             <a
               href={newsUrl}
               target="_blank"

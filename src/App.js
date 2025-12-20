@@ -6,8 +6,10 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 export default class App extends Component {
+  pageSize = 11
   render() {
     return (
+
       <>
         <Router>
           <Navbar title="NewsApp" />
@@ -16,20 +18,20 @@ export default class App extends Component {
               exact
               path="/"
               key="general"
-              element={<News pageSize={6} country="us" category="general"  categorytitle=""/>}
+              element={<News pageSize={this.pageSize} country="us" category="general"  />}
             />
             <Route
               exact
               path="/business"
               key="business"
-              element={<News pageSize={6} country="us" category="business" categorytitle="Business"/>}
+              element={<News pageSize={this.pageSize} country="us" category="business" />}
             />
             <Route
               exact
               path="/entertainment"
               key="entertainment"
               element={
-                <News pageSize={6} country="us" category="entertainment" categorytitle="Entertainment"/>
+                <News pageSize={this.pageSize} country="us" category="entertainment" />
               }
             />
          
@@ -37,25 +39,25 @@ export default class App extends Component {
               exact
               path="/health"
               key="health"
-              element={<News pageSize={6} country="us" category="health" categorytitle="Health"/>}
+              element={<News pageSize={this.pageSize} country="us" category="health" />}
             />
             <Route
               exact
               path="/sports"
               key="sports"
-              element={<News pageSize={6} country="us" category="sports" categorytitle="Sports" />}
+              element={<News pageSize={this.pageSize} country="us" category="sports"  />}
             />
             <Route
               exact
               path="/science"
               key="science"
-              element={<News pageSize={6} country="us" category="science" categorytitle="Science"/>}
+              element={<News pageSize={this.pageSize} country="us" category="science" />}
             />
             <Route
               exact
               path="/technology"
               key="technology"
-              element={<News pageSize={6} country="us" category="technology" categorytitle="Technology"/>}
+              element={<News pageSize={this.pageSize} country="us" category="technology" />}
             />
           </Routes>
         </Router>

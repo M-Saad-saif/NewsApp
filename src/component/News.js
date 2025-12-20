@@ -17,8 +17,15 @@ export default class News extends Component {
     category: PropTypes.string,
   };
 
-  constructor() {
-    super();
+  capitalizeFirstLetter = (str) => {
+    if (typeof str !== "string" || str.length === 0) {
+      return str; // Handles empty strings or non-string inputs
+    }
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
+
+  constructor(props) {
+    super(props);
     this.state = {
       articles: [],
       loading: false,
@@ -35,6 +42,9 @@ export default class News extends Component {
       prevProps.category !== this.props.category ||
       prevProps.country !== this.props.country
     ) {
+      document.title = `NewsApp - ${this.capitalizeFirstLetter(
+        this.props.category
+      )}`;
       this.setState({ page: 1 });
       this.fetchArticles(1);
     }
@@ -47,6 +57,7 @@ export default class News extends Component {
 
     let data = await fetch(url);
     let response = await data.json();
+    console.log(response);
     this.setState({
       articles: response.articles,
       totalResults: response.totalResults,
@@ -77,7 +88,11 @@ export default class News extends Component {
       <>
         <div className="container my-4">
           <h1>
-            NewsApp - Top Daily news <i> {this.props.categorytitle}</i>
+            NewsApp -
+            <small>
+            
+              Top {this.capitalizeFirstLetter(this.props.category)} news{" "}
+            </small>
           </h1>
           {this.state.loading && <Spinner />}
           <div className="row my-3">
@@ -94,6 +109,9 @@ export default class News extends Component {
                       }
                       imgUrl={element.urlToImage}
                       newsUrl={element.url}
+                      author={element.author}
+                      date={element.publishedAt}
+                      source={element.source.name}
                     />
                   </div>
                 );
