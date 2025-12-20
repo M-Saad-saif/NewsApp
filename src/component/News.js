@@ -1,8 +1,22 @@
 import NewsItems from "./NewsItems";
 import Spinner from "./Spinner";
+import PropTypes from "prop-types";
+
 import React, { Component } from "react";
 
 export default class News extends Component {
+  static defaultProps = {
+    country: "us",
+    pageSize: 6,
+    category: "general",
+  };
+
+  static propTypes = {
+    country: PropTypes.string,
+    pageSize: PropTypes.number,
+    category: PropTypes.string,
+  };
+
   constructor() {
     super();
     this.state = {
@@ -12,20 +26,33 @@ export default class News extends Component {
       totalResults: 0,
     };
   }
-
   async componentDidMount() {
-    let url = `https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=70ee2adecca94fe59d560de1fd9039b3&page=1&pageSize=${this.props.pageSize}`;
+    this.fetchArticles(1);
+  }
 
-    this.setState({loading: true})
+  async componentDidUpdate(prevProps) {
+    if (
+      prevProps.category !== this.props.category ||
+      prevProps.country !== this.props.country
+    ) {
+      this.setState({ page: 1 });
+      this.fetchArticles(1);
+    }
+  }
+
+  fetchArticles = async (page) => {
+    const url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=70ee2adecca94fe59d560de1fd9039b3&page=${page}&pageSize=${this.props.pageSize}`;
+
+    this.setState({ loading: true });
 
     let data = await fetch(url);
     let response = await data.json();
     this.setState({
       articles: response.articles,
       totalResults: response.totalResults,
-      loading: false
+      loading: false,
     });
-  }
+  };
 
   handleNextbtn = async () => {
     if (
@@ -33,64 +60,44 @@ export default class News extends Component {
       Math.ceil((this.state.totalResults || 0) / this.props.pageSize)
     )
       return;
-
-    let url = `https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=70ee2adecca94fe59d560de1fd9039b3&page=${
-      this.state.page + 1
-    }&pageSize=${this.props.pageSize}`;
-
-    this.setState({ loading: true });
-    let data = await fetch(url);
-    let response = await data.json();
-
-    this.setState({
-      page: this.state.page + 1,
-      articles: response.articles,
-      loading: false,
-    });
+    const nextPage = this.state.page + 1;
+    await this.fetchArticles(nextPage);
+    this.setState({ page: nextPage });
   };
 
   handlePrevbtn = async () => {
     if (this.state.page <= 1) return;
-
-    let url = `https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=70ee2adecca94fe59d560de1fd9039b3&page=${
-      this.state.page - 1
-    }&pageSize=${this.props.pageSize}`;
-
-    this.setState({loading: true})
-
-    let data = await fetch(url);
-    let response = await data.json();
-
-    this.setState({
-      page: this.state.page - 1,
-      articles: response.articles,
-      loading: false
-    });
+    const prevPage = this.state.page - 1;
+    await this.fetchArticles(prevPage);
+    this.setState({ page: prevPage });
   };
 
   render() {
     return (
       <>
         <div className="container my-4">
-          <h1>NewsApp - top Daily news</h1>
+          <h1>
+            NewsApp - Top Daily news <i> {this.props.categorytitle}</i>
+          </h1>
           {this.state.loading && <Spinner />}
           <div className="row my-3">
-            {!this.state.loading &&(this.state.articles || []).map((element) => {
-              return (
-                <div className="col-md-4" key={element.url}>
-                  <NewsItems
-                    title={element.title ? element.title.slice(0, 40) : ""}
-                    description={
-                      element.description
-                        ? element.description.slice(0, 80)
-                        : ""
-                    }
-                    imgUrl={element.urlToImage}
-                    newsUrl={element.url}
-                  />
-                </div>
-              );
-            })}
+            {!this.state.loading &&
+              (this.state.articles || []).map((element) => {
+                return (
+                  <div className="col-md-4" key={element.url}>
+                    <NewsItems
+                      title={element.title ? element.title.slice(0, 40) : ""}
+                      description={
+                        element.description
+                          ? element.description.slice(0, 80)
+                          : ""
+                      }
+                      imgUrl={element.urlToImage}
+                      newsUrl={element.url}
+                    />
+                  </div>
+                );
+              })}
             <div className="btns">
               <button
                 type="button"
