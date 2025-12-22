@@ -18,9 +18,9 @@ export default class NewItems extends Component {
             alt="..."
           />
           <div className="card-body">
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+            <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
               {source}
-              <span class="visually-hidden">unread messages</span>
+              <span className="visually-hidden">unread messages</span>
             </span>
 
             <h5 className="card-title">{title}....</h5>

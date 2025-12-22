@@ -1,8 +1,8 @@
+import React, { Component } from "react";
 import NewsItems from "./NewsItems";
 import Spinner from "./Spinner";
 import PropTypes from "prop-types";
-
-import React, { Component } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 export default class News extends Component {
   static defaultProps = {
@@ -18,9 +18,7 @@ export default class News extends Component {
   };
 
   capitalizeFirstLetter = (str) => {
-    if (typeof str !== "string" || str.length === 0) {
-      return str; // Handles empty strings or non-string inputs
-    }
+    if (typeof str !== "string" || str.length === 0) return str;
     return str.charAt(0).toUpperCase() + str.slice(1);
   };
 
@@ -33,7 +31,11 @@ export default class News extends Component {
       totalResults: 0,
     };
   }
+
   async componentDidMount() {
+    document.title = `NewsApp - ${this.capitalizeFirstLetter(
+      this.props.category
+    )}`;
     this.fetchArticles(1);
   }
 
@@ -45,42 +47,33 @@ export default class News extends Component {
       document.title = `NewsApp - ${this.capitalizeFirstLetter(
         this.props.category
       )}`;
-      this.setState({ page: 1 });
-      this.fetchArticles(1);
+      this.setState({ page: 1, articles: [] }, () => this.fetchArticles(1));
     }
   }
 
   fetchArticles = async (page) => {
+    this.props.setProgress(10);
     const url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=70ee2adecca94fe59d560de1fd9039b3&page=${page}&pageSize=${this.props.pageSize}`;
-
-    this.setState({ loading: true });
 
     let data = await fetch(url);
     let response = await data.json();
     console.log(response);
+    // Filter duplicates
+    const uniqueArticles = response.articles.filter(
+      (article) => !this.state.articles.some((a) => a.url === article.url)
+    );
+
     this.setState({
-      articles: response.articles,
+      articles: this.state.articles.concat(uniqueArticles),
       totalResults: response.totalResults,
-      loading: false,
+      page,
     });
+    this.props.setProgress(100);
   };
 
-  handleNextbtn = async () => {
-    if (
-      this.state.page + 1 >
-      Math.ceil((this.state.totalResults || 0) / this.props.pageSize)
-    )
-      return;
+  fetchMoreData = async () => {
     const nextPage = this.state.page + 1;
-    await this.fetchArticles(nextPage);
-    this.setState({ page: nextPage });
-  };
-
-  handlePrevbtn = async () => {
-    if (this.state.page <= 1) return;
-    const prevPage = this.state.page - 1;
-    await this.fetchArticles(prevPage);
-    this.setState({ page: prevPage });
+    this.fetchArticles(nextPage);
   };
 
   render() {
@@ -90,16 +83,24 @@ export default class News extends Component {
           <h1>
             NewsApp -
             <small>
-            
-              Top {this.capitalizeFirstLetter(this.props.category)} news{" "}
+              Top {this.capitalizeFirstLetter(this.props.category)} news
             </small>
           </h1>
-          {this.state.loading && <Spinner />}
-          <div className="row my-3">
-            {!this.state.loading &&
-              (this.state.articles || []).map((element) => {
-                return (
-                  <div className="col-md-4" key={element.url}>
+
+          <div className="News-section">
+            <InfiniteScroll
+              style={{ overflow: " hidden" }}
+              dataLength={this.state.articles.length}
+              next={this.fetchMoreData}
+              hasMore={this.state.articles.length !== this.state.totalResults}
+              loader={<Spinner />}
+            >
+              <div className="row my-3">
+                {(this.state.articles || []).map((element, index) => (
+                  <div
+                    className="col-md-4"
+                    key={element.url + index} // ensures unique key
+                  >
                     <NewsItems
                       title={element.title ? element.title.slice(0, 40) : ""}
                       description={
@@ -114,29 +115,9 @@ export default class News extends Component {
                       source={element.source.name}
                     />
                   </div>
-                );
-              })}
-            <div className="btns">
-              <button
-                type="button"
-                disabled={this.state.page <= 1}
-                className="btn btn-primary"
-                onClick={this.handlePrevbtn}
-              >
-                <i className="ri-arrow-left-fill"></i>Previous
-              </button>
-              <button
-                type="button"
-                disabled={
-                  this.state.page + 1 >
-                  Math.ceil(this.state.totalResults / this.props.pageSize)
-                }
-                className="btn btn-primary"
-                onClick={this.handleNextbtn}
-              >
-                Next <i className="ri-arrow-right-fill"></i>
-              </button>
-            </div>
+                ))}
+              </div>
+            </InfiniteScroll>
           </div>
         </div>
       </>
