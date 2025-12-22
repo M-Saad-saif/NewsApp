@@ -36,7 +36,7 @@ export default class News extends Component {
     document.title = `NewsApp - ${this.capitalizeFirstLetter(
       this.props.category
     )}`;
-    this.fetchArticles(1);
+    this.fetchArticles(1,true);
   }
 
   async componentDidUpdate(prevProps) {
@@ -47,13 +47,16 @@ export default class News extends Component {
       document.title = `NewsApp - ${this.capitalizeFirstLetter(
         this.props.category
       )}`;
-      this.setState({ page: 1, articles: [] }, () => this.fetchArticles(1));
+      this.setState({ page: 1, articles: [] }, () => this.fetchArticles(1, true));
     }
   }
 
-  fetchArticles = async (page) => {
-    this.props.setProgress(10);
-    const url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=70ee2adecca94fe59d560de1fd9039b3&page=${page}&pageSize=${this.props.pageSize}`;
+  fetchArticles = async (page, showLoader = false) => {
+    if (showLoader) {
+      this.props.setProgress(10);
+    }
+
+    const url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.props.Apikey}&page=${page}&pageSize=${this.props.pageSize}`;
 
     let data = await fetch(url);
     let response = await data.json();
@@ -63,17 +66,20 @@ export default class News extends Component {
       (article) => !this.state.articles.some((a) => a.url === article.url)
     );
 
+    if (showLoader) {
+      this.props.setProgress(100);
+    }
+
     this.setState({
       articles: this.state.articles.concat(uniqueArticles),
       totalResults: response.totalResults,
       page,
     });
-    this.props.setProgress(100);
   };
 
   fetchMoreData = async () => {
     const nextPage = this.state.page + 1;
-    this.fetchArticles(nextPage);
+    this.fetchArticles(nextPage, false);
   };
 
   render() {
