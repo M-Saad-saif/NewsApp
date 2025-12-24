@@ -1,42 +1,52 @@
-.App {
-  text-align: center;
+/*================================= navbar css===================================== */
+
+.navbar {
+  background: #0782ff59;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+.container-fluid {
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+
+.navbar-collapse {
+  justify-content: right;
+  margin-right: 30px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.nav-link {
+  border-radius: 6px;
+  height: 41px;
+  margin-top: 2px;
 }
 
-.News-section{
-  overflow-y: hidden;
+.nav-link:hover {
+  background: linear-gradient(rgba(255, 255, 255, 0), #0d6dfd69);
+}
+
+/*================================= newsitem css===================================== */
+
+.card {
+  overflow: hidden;
+  background-color: #a8d3ff87;
+}
+
+.card img {
+  transition: transform 0.1s ease-in-out;
+  overflow: hidden;
+}
+
+.card img:hover {
+  transform: scale(1.05);
+  object-fit: contain;
+  cursor: pointer;
+}
+
+
+/*================================= news css===================================== */
+
+.newsitem-constainer {
+  justify-self: center;
+  justify-items: center;
+  margin-bottom: 28px;
 }

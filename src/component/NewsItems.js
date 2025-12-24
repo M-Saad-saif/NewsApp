@@ -1,9 +1,7 @@
-import React, { Component } from "react";
+  import React from "react";
 
-export default class NewItems extends Component {
-  render() {
-    let { title, description, imgUrl, newsUrl, author, date, source } =
-      this.props;
+  const NewItems = (props) => {
+    let { title, description, imgUrl, newsUrl, author, date, source } = props;
 
     return (
       <>
@@ -18,7 +16,8 @@ export default class NewItems extends Component {
             alt="..."
           />
           <div className="card-body">
-            <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+            <span className="position-absolute my-2  top-0 start-100  translate-middle badge rounded-pill bg-danger" style={{ justifySelf: "anchor-center" }}>
+              
               {source}
               <span className="visually-hidden">unread messages</span>
             </span>
@@ -49,5 +48,5 @@ export default class NewItems extends Component {
         </div>
       </>
     );
-  }
-}
+  };
+  export default NewItems;
