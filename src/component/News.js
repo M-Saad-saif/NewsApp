@@ -15,38 +15,30 @@ const News = (props) => {
   };
 
   // Fetch news articles
-  const fetchArticles = async (pageNumber = 1, showLoader = false) => {
-    if (showLoader && props.setProgress) props.setProgress(10);
+  const fetchArticles = async (pageNumber, showLoader = false) => {
+    if (showLoader) props.setProgress(10);
 
-    try {
-      const url = `/api/news?category=${props.category}&page=${pageNumber}`;
-      const data = await fetch(url);
+    const url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.Apikey}&page=${pageNumber}&pageSize=${props.pageSize}`;
 
-      // Safely parse JSON
-      const json = await data.json();
+    const data = await fetch(url);
+    const response = await data.json();
 
-      if (json.error) {
-        console.error("API Error:", json.error);
-        return; // stop if error returned
-      }
+    if (showLoader) props.setProgress(100);
 
-      setArticles((prevArticles) => {
-        // Combine and remove duplicates based on URL
-        const uniqueArticles = [
-          ...prevArticles,
-          ...json.articles.filter(
-            (a) => !prevArticles.some((prev) => prev.url === a.url)
-          ),
-        ];
-        return uniqueArticles;
-      });
-    } catch (error) {
-      console.error("Fetch failed:", error);
-    } finally {
-      if (showLoader && props.setProgress) props.setProgress(100);
-    }
+    setArticles((prevArticles) => {
+      const uniqueArticles = response.articles.filter(
+        (article) => !prevArticles.some((a) => a.url === article.url)
+      );
+      return pageNumber === 1
+        ? uniqueArticles
+        : [...prevArticles, ...uniqueArticles];
+    });
+
+    setTotalResults(response.totalResults);
+    setPage(pageNumber);
   };
 
+  
   //  componentDidUpdate (category / country change)
   useEffect(() => {
     document.title = `NewsApp - ${capitalizeFirstLetter(props.category)}`;
@@ -76,10 +68,7 @@ const News = (props) => {
       >
         <div className="row my-3">
           {articles.map((element, index) => (
-            <div
-              className="newsitem-constainer col-md-4"
-              key={element.url + index}
-            >
+            <div className="newsitem-constainer col-md-4" key={element.url + index}>
               <NewsItems
                 title={element.title?.slice(0, 40) || ""}
                 description={element.description?.slice(0, 80) || ""}
@@ -107,7 +96,8 @@ News.propTypes = {
   country: PropTypes.string,
   pageSize: PropTypes.number,
   category: PropTypes.string,
+  Apikey: PropTypes.string.isRequired,
   setProgress: PropTypes.func,
 };
 
-export default News;
+export default News;  

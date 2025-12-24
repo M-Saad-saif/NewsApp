@@ -64,7 +64,7 @@ const Navbar = (props) => {
             </ul>
             <div>
               <Link to="https://github.com/M-Saad-saif" target="_blank" rel="noopener">
-                <button type="button" class="btn btn-primary ">
+                <button type="button" className="btn btn-primary ">
                   GitHub
                 </button>
               </Link>
