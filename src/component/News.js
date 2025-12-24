@@ -16,27 +16,26 @@ const News = (props) => {
 
   // Fetch news articles
   const fetchArticles = async (pageNumber, showLoader = false) => {
-    if (showLoader) props.setProgress(10);
+  if (showLoader && props.setProgress) props.setProgress(10);
 
-    const url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.Apikey}&page=${pageNumber}&pageSize=${props.pageSize}`;
+  const url = `/api/news?category=${props.category}&page=${pageNumber}`;
+  const data = await fetch(url);
+  const response = await data.json();
 
-    const data = await fetch(url);
-    const response = await data.json();
+  if (showLoader && props.setProgress) props.setProgress(100);
 
-    if (showLoader) props.setProgress(100);
+  setArticles((prevArticles) => {
+    const uniqueArticles = response.articles.filter(
+      (article) => !prevArticles.some((a) => a.url === article.url)
+    );
+    return pageNumber === 1
+      ? uniqueArticles
+      : [...prevArticles, ...uniqueArticles];
+  });
 
-    setArticles((prevArticles) => {
-      const uniqueArticles = response.articles.filter(
-        (article) => !prevArticles.some((a) => a.url === article.url)
-      );
-      return pageNumber === 1
-        ? uniqueArticles
-        : [...prevArticles, ...uniqueArticles];
-    });
-
-    setTotalResults(response.totalResults);
-    setPage(pageNumber);
-  };
+  setTotalResults(response.totalResults);
+  setPage(pageNumber);
+};
 
   
   //  componentDidUpdate (category / country change)
@@ -96,8 +95,8 @@ News.propTypes = {
   country: PropTypes.string,
   pageSize: PropTypes.number,
   category: PropTypes.string,
-  Apikey: PropTypes.string.isRequired,
   setProgress: PropTypes.func,
 };
+
 
 export default News;
