@@ -8,7 +8,7 @@ const Navbar = (props) => {
       <nav className="navbar navbar-expand-lg ">
         <div className="container-fluid">
           <Link className="navbar-brand" to="/">
-            {props.title}
+            <i class="fa-solid fa-newspaper"></i>{props.title}
           </Link>
 
           <button
@@ -65,7 +65,7 @@ const Navbar = (props) => {
             <div>
               <Link to="https://github.com/M-Saad-saif" target="_blank" rel="noopener">
                 <button type="button" className="btn btn-primary ">
-                  GitHub
+                  GitHub <i class="fa-brands fa-github"></i>
                 </button>
               </Link>
             </div>

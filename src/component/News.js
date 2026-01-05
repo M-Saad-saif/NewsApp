@@ -56,7 +56,7 @@ const News = (props) => {
   return (
     <div className="container my-4">
       <h1 className="text-center">
-        NewsApp - Top {capitalizeFirstLetter(props.category)} News
+       <i class="fa-solid fa-newspaper"></i> NewsApp - Top {capitalizeFirstLetter(props.category)} News
       </h1>
 
       <InfiniteScroll
