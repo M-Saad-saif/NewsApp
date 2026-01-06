@@ -42,7 +42,7 @@
               rel="noreferrer"
               className="btn btn-sm btn-primary"
             >
-              More Details <i class="fa-solid fa-circle-info"></i>
+              More Details <i className="fa-solid fa-circle-info"></i>
             </a>
           </div>
         </div>
