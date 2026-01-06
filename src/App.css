@@ -1,4 +1,4 @@
-body{
+body {
   background-color: azure;
 }
 
@@ -6,7 +6,12 @@ body{
 
 
 .navbar {
-  background: #0782ff59;
+  background: #2188f275;
+  position: fixed;
+  top: 0;
+  z-index: 2;
+  width: 100%;
+  backdrop-filter: blur(31px);
 }
 
 .container-fluid {
@@ -20,14 +25,22 @@ body{
 }
 
 .nav-link {
-  border-radius: 6px;
-  height: 41px;
-  margin-top: 2px;
+    border-radius: 6px;
+    height: 41px;
+    margin-top: 2px;
+    justify-self: center;
+    color: black;
+    width: 100%;
+    text-align: center;
+    /* left: 13px; */
+    position: relative;
 }
 
 .nav-link:hover {
   background: linear-gradient(rgba(255, 255, 255, 0), #0d6dfd69);
 }
+
+
 
 /*================================= newsitem css===================================== */
 

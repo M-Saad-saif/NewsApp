@@ -51,7 +51,7 @@ const News = (props) => {
   };
 
   return (
-    <div className="container my-4">
+    <div className="container" style={{marginTop: "6rem"}}>
       <h1 className="text-center">
         <i className="fa-solid fa-newspaper"></i> NewsApp - Top{" "}
         {capitalizeFirstLetter(props.category)} News
