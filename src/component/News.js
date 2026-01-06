@@ -66,7 +66,7 @@ const News = (props) => {
       >
         <div className="row my-3">
           {articles.map((element, index) => (
-            <div className="col-md-4" key={element.url + index}>
+            <div className="container d-flex justify-content-center col-md-4 my-3" key={element.url + index}>
               <NewsItems
                 title={element.title?.slice(0, 40) || "No Title"}
                 description={element.description?.slice(0, 80) || "No Description"}
