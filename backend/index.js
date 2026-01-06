@@ -5,7 +5,9 @@ const path = require("path");
 require("dotenv").config({ path: path.join(__dirname, ".env") });
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: "https://news-app-rust-eta.vercel.app"
+}));  
 
 const PORT = process.env.PORT || 5000;
 
